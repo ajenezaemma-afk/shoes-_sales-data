@@ -13,7 +13,7 @@ import os
 
 
 # Load the trained model
-loaded_model = pickle.load(open('C:/Users/HOME-PC/Desktop/shoes data/shoes_sales_data.sav', 'rb'))
+loaded_model = pickle.load(open('shoes_sales_data.sav', 'rb'))
 
 def shoes_price_prediction(brand, color, size):
                             
@@ -55,4 +55,5 @@ def main():
             
          st.error("Please enter valid numeric values for all inputs.")
 if __name__ == '__main__':
+
     main()         
