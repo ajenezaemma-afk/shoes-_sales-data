@@ -29,8 +29,9 @@ if st.button("Predict"):
     Input = np.array([[brand,color,size]])
     
     # Predict
-    prediction = model.predict(Input)
+    prediction = loaded_model.predict(Input)
     
     # Show result
     st.success(f"shoes sales data prediction is : {prediction[0]:.2f}")
+
 
