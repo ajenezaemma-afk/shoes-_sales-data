@@ -1,37 +1,58 @@
+# -*- coding: utf-8 -*-
+"""
+Created on Thu Sep 25 10:14:20 2025
+
+@author: Admin
+"""
+
+import pickle
+import pandas as pd
 import numpy as np
 import streamlit as st
-import joblib
-
-# Load model and columns
-loaded_model = joblib.load("shoes_sales_data.joblib")
-model_columns = joblib.load("model_columns.joblib")
 import os
-import joblib
 
-BASE_DIR = os.path.dirname(__file__)
-model_path = os.path.join(BASE_DIR, "shoes_sales_data.joblib")
-columns_path = os.path.join(BASE_DIR, "model_columns.joblib")
 
-loaded_model = joblib.load(model_path)
-model_columns = joblib.load(columns_path)
-# Streamlit UI
-st.title("Shoes Sales Data Prediction")
+# Load the trained model
+loaded_model = pickle.load(open('C:/Users/HOME-PC/Desktop/shoes data/shoes_sales_data.sav', 'rb'))
 
-brand = st.number_input("Brand", value=26)
-color = st.number_input("Color", value=4)
-size = st.number_input("Size", value=6.5)
-
-if st.button("Predict"):
-    # Create a dataframe with the same columns
-    import pandas as pd
-    input_dict = {"brand": brand, "color": color, "size": size}
-    input_df = pd.DataFrame([input_dict])
+def shoes_price_prediction(brand, color, size):
+                            
+    # Create DataFrame from input
+    new_shoes = pd.DataFrame([{
+        'brand': 26,
+        'color': 2,
+        'size': 10,
+        
+    }])
     
-    # Ensure all columns match model
-    input_df = pd.get_dummies(input_df)
-    input_df = input_df.reindex(columns=model_columns, fill_value=0)
+    # Predict price
+    predicted_price = loaded_model.predict(new_shoes)
     
-    # Predict
-    prediction = loaded_model.predict(input_df)
-    st.success(f"Predicted shoe price: {prediction[0]:.2f}")
+    # Return the prediction
+    return predicted_price[0]
+# Main Streamlit app
+def main():
+    st.title("shoes Price Prediction")
 
+    # Input fields for all features
+    brand = st.text_input('brand (e.g., 26)')
+    color = st.text_input('color (e.g., 2)')
+    size = st.text_input('size (inches) (e.g., 10)')
+    
+    if st.button('Predict shoes Price'):
+        try:
+        # Convert inputs to numeric types
+         brand = int(brand)
+         color = int(color)
+         size = float(size)
+         
+
+        # Call the prediction function (just fix indentation)
+         shoes = shoes_price_prediction(
+            brand, color, size)
+         st.success(f'The predicted price for the shoes is: RWF {shoes:.2f}')
+        except ValueError:
+            
+         st.error("Please enter valid numeric values for all inputs.")
+if __name__ == '__main__':
+    main()         
