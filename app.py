@@ -5,7 +5,15 @@ import joblib
 # Load model and columns
 loaded_model = joblib.load("shoes_sales_data.joblib")
 model_columns = joblib.load("model_columns.joblib")
+import os
+import joblib
 
+BASE_DIR = os.path.dirname(__file__)
+model_path = os.path.join(BASE_DIR, "shoes_sales_data.joblib")
+columns_path = os.path.join(BASE_DIR, "model_columns.joblib")
+
+loaded_model = joblib.load(model_path)
+model_columns = joblib.load(columns_path)
 # Streamlit UI
 st.title("Shoes Sales Data Prediction")
 
@@ -26,3 +34,4 @@ if st.button("Predict"):
     # Predict
     prediction = loaded_model.predict(input_df)
     st.success(f"Predicted shoe price: {prediction[0]:.2f}")
+
