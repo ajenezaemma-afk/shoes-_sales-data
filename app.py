@@ -1,37 +1,28 @@
-
-
-
 import numpy as np
 import streamlit as st
-import pickle
 import joblib
 
-
+# Load model and columns
 loaded_model = joblib.load("shoes_sales_data.joblib")
-print("Model loaded successfully!")
-
+model_columns = joblib.load("model_columns.joblib")
 
 # Streamlit UI
-st.title("shoes sales data prediction")
-st.write("Fill the following information to get a prediction:")
+st.title("Shoes Sales Data Prediction")
 
-# User Inputs
-brand = st.number_input("brand", value=26)
-color = st.number_input("color", value=4)
-size = st.number_input("size", value=6.5)
+brand = st.number_input("Brand", value=26)
+color = st.number_input("Color", value=4)
+size = st.number_input("Size", value=6.5)
 
-
-
-
-# Prediction on button click
 if st.button("Predict"):
-    # Create input in correct order and shape
-    Input = np.array([[brand,color,size]])
+    # Create a dataframe with the same columns
+    import pandas as pd
+    input_dict = {"brand": brand, "color": color, "size": size}
+    input_df = pd.DataFrame([input_dict])
+    
+    # Ensure all columns match model
+    input_df = pd.get_dummies(input_df)
+    input_df = input_df.reindex(columns=model_columns, fill_value=0)
     
     # Predict
-    prediction = loaded_model.predict(Input)
-    
-    # Show result
-    st.success(f"shoes sales data prediction is : {prediction[0]:.2f}")
-
-
+    prediction = loaded_model.predict(input_df)
+    st.success(f"Predicted shoe price: {prediction[0]:.2f}")
